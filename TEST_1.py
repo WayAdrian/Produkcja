@@ -11,6 +11,16 @@ import datetime
 import pyodbc
 
 
+# 1.A Wchodze w definicje dokmentów - funkcja sprWZ, szuka definicji dokmentu WZ i ustawia na nim
+        # rejestr do przekształceń
+# 1.B Wchodze w definicje dokmentów - funkcja sprZS, szuka definicji dokmentu ZS i ustawia na nim
+        # rejestr do przekształceń
+# 1.C Wchodzę w definicje dokumetów - funkcja sprWD, szuka definicji dokumentu WD i ustawia na nim rejestr
+        # do wygenerowanego dokumentu
+# 1.D Dodaje definicje dokmentu R - ustawiam na nim, że to dokumet produkcyjny
+# 1.E Dodaje definicje dokumentu P - ustawiam na nim, że to dokument produkcyjny
+# 1.F Dodaje rejstr ZPR i ustawiam na nim magazyny dla przychodó i rozchodów oraz ustawiam zapotrzebowanie
+        # przy generowaniu na NIE
 
 today = str(datetime.date.today())
 dzis = today.replace("-", "")
@@ -18,12 +28,10 @@ f.pyautogui.PAUSE = 1
 poczatek_testu = time.time()
 
 f.nowytxt() # dodaje plik txt dla raportu
-f.doplikutxt("\n Kartoteka ")
+
 
 
 f.aktywacja()
-
-
 
 
 def next():
@@ -37,10 +45,7 @@ def next():
 
 
 
-# Definicja ZZ ustawienie dok. do przkesztacenia =PZ
-f.operacje('o', 'd')
-f.kilka(12, 'down')
-f.kilka(2, 'right')
+
 def sprWZ():
 
     f.dwa('ctrl', 'c')
@@ -93,10 +98,12 @@ def sprZS():
 
         f.jeden('enter')
         f.time.sleep(1)
+        f.kilka(12, 'down')
         f.kilka(1, 'tab')
-        f.kilka(1,'down')# ustawiam do przkesztacenia PZ
+        f.kilka(1,'down')
         f.kilka(1, 'tab')
-        f.jeden('enter')
+        f.kilka(1, 'tab')
+        f.dwa('shift', 'o')
         f.kilka(1, 'tab')
         f.dwa('shift', 'o')
 
@@ -209,22 +216,36 @@ def dodP():
     f.kilka(1, 'tab')
     f.dwa('shift', 'o')
 
+#1.A
+
+f.operacje('o', 'd')
+f.kilka(10, 'down')
+f.kilka(2, 'right')
 
 sprWZ()
 f.kilka(20, 'down')
+
+#1.B
 sprZS()
-f.kilka(11, 'tab')
+
+#1.C
 sprWD()
+
+#1.D
 dodR()
+
+#1.E
 dodP()
 
 f.jeden('esc')
 
-
+#1.F
 f.dwa('shift', 'alt')
-f.kilka(21, 'down')
+#f.kilka(21, 'down')
+f.kilka(20, 'down') # maszynka
 f.kilka(1, 'right')
-f.kilka(20, 'down')
+#f.kilka(20, 'down')
+f.kilka(18, 'down') # maszynka
 f.jeden('enter')
 f.time.sleep(0.5)
 

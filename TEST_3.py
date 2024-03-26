@@ -11,7 +11,7 @@ import sys
 import datetime
 import pyodbc
 
-
+# 3.A - Dodaje towar T1
 
 
 today = str(datetime.date.today())
@@ -19,60 +19,29 @@ dzis = today.replace("-", "")
 f.pyautogui.PAUSE = 1
 poczatek_testu = time.time()
 
-def next():
-    f.jeden('enter')
-    f.kilka(1, 'down')
-    f.jeden('enter')
-    f.kilka(1, 'down')
 
 
 f.aktywacja()
 
 
-# #
-# #
-# # dodaje dostawce
-f.operacje('p', 'k')
-f.jeden('insert')
-f.time.sleep(3)
-f.kilka(1, 'tab')
-f.kilka(1, 'down') # typ dostawca
-f.kilka(29, 'tab')
-f.tekst('D-' + dzis)
-f.kilka(2, 'tab')
-f.dwa('shift', 'o')
-f.kilka(1, 'right')
-f.dwa('ctrl', 'c')
-dostawca = pyperclip.paste()
-time.sleep(3)
+def sprawdz_art(symbol_art, rodz_art):
+    zapytanie = "SELECT rodz_art, symbol_art FROM artykuly WHERE symbol_art = ? AND rodz_art = ?;"
+    f.cursor.execute(zapytanie, (symbol_art, rodz_art))
+    results = f.cursor.fetchall()
+    print(results)
+    assert results, f"Dokument '{symbol_art}' o typie '{rodz_art}' nie istnieje w bazie danych!"
+    return results
 
-#odbiorce
-f.jeden('insert')
-time.sleep(1)
-f.kilka(30, 'tab')
-f.tekst('O-' + dzis)
-f.kilka(1, 'tab')
-for i in range(2):
-    keyboard.press_and_release('ctrl+tab')
-f.time.sleep(0.5)
-f.kilka(1, 'tab')
-f.jeden('insert')
-f.time.sleep(0.5)
-f.kilka(1,'tab')
-f.tekst('Warszawa')
-for i in range(1):
-    keyboard.press_and_release('ctrl+tab')
-f.dwa('shift', 'o')
-f.kilka(1, 'tab')
-f.dwa('shift', 'o')
-time.sleep(1)
-f.dwa('ctrl', 'c')
-odbiorca = pyperclip.paste()
-f.jeden('esc')
-print(dostawca, odbiorca)
-#############################################################
+def sprawdz_tech(symbol_tec, symbol_wyr):
+    zapytanie = "select symbol_tec, symbol_wyr from technolog WHERE symbol_tec = ? AND symbol_wyr = ?;"
+    f.cursor.execute(zapytanie, (symbol_wyr, symbol_tec))
+    results = f.cursor.fetchall()
+    print(results)
+    assert results, f"Dokument '{symbol_wyr}' o typie '{symbol_tec}' nie istnieje w bazie danych!"
+    return results
 
-# Dodanie artykułu: Towar T1 SZT
+f.aktywacja()
+# 2.C
 f.operacje('p', 'a')
 f.jeden('insert')
 f.time.sleep(3)
@@ -83,6 +52,8 @@ f.kilka(11, 'tab')
 f.tekst('SZT')
 f.kilka(1, 'tab')
 f.dwa('shift', 'o')
+#asercja
+sprawdz_art('T1', 'T')
 
 # Dodanie artykułu Surowiec S1 KG + Dostawca
 f.jeden('insert')
@@ -100,7 +71,7 @@ for i in range(6):
     f.time.sleep(0.1)
 f.kilka(1, 'tab')
 f.jeden('insert')
-f.tekst(dostawca) # tu bedzie później dostawca
+f.tekst('K0002') # tu bedzie później dostawca
 f.kilka(2, 'tab')
 f.tekst('55')
 f.kilka(3, 'tab')
@@ -112,12 +83,15 @@ f.jeden('spacja')
 f.dwa('shift', 'o')
 f.kilka(3, 'tab')
 f.dwa('shift', 'o')
+#asercja
+sprawdz_art('S1', "S")
 
 
 # Dodaje wyrób
-# Uzupełniam dane podstawowe
+# Uzupełniam d
+# Dane podstawowe
 f.jeden('insert')
-f.time.sleep(1)
+f.time.sleep(2.5)
 f.tekst('W1')
 f.kilka(1, 'tab')
 f.tekst('W1')
@@ -139,7 +113,7 @@ f.kilka(1, 'tab') # zatwierdzam ale to do usuniecia jak w 007 bedzie poprawione 
 f.dwa('shift', 'o')
 f.time.sleep(1)
 
-
+sprawdz_art('W1', "W")
 # checkbox obsługa partii
 # for i in range(3):
 #     keyboard.press_and_release('ctrl+tab')
@@ -152,7 +126,7 @@ f.time.sleep(1)
 #### DOdaje technologie i operacje !!!!!!!!!!
 # Dodaje Półprodukt
 f.jeden('insert')
-f.time.sleep(1)
+f.time.sleep(2.5)
 f.tekst('PP1')
 f.kilka(1, 'tab')
 f.tekst('PP1')
@@ -163,10 +137,11 @@ f.tekst('SZT')
 f.kilka(1, 'tab')
 f.dwa('shift', 'o')
 
+sprawdz_art('PP1', "R")
 
 f.time.sleep(1)
 f.jeden('f12')
-f.kilka(34, 'down')
+f.kilka(31, 'down')
 f.jeden('enter')
 # dane podstawowe technologii
 f.dwa('ctrl', 'a')
@@ -179,7 +154,7 @@ f.kilka(1, 'down')
 f.kilka(1, 'tab')
 
 f.zakladka(1)
-#zakładka operacje
+
 f.kilka(1, 'tab')
 f.jeden('insert')
 f.time.sleep(1)
@@ -190,7 +165,9 @@ f.kilka(2, 'tab')
 f.tekst('OP')
 f.kilka(2, 'tab')
 f.time.sleep(1)
-f.zakladka(4)
+f.zakladka(1)
+f.time.sleep(1)
+f.zakladka(3)
 #zakładka wyroby gotowe
 f.kilka(1, 'tab')
 f.jeden('insert')
@@ -212,6 +189,7 @@ f.zakladka(3)
 #zakładka surowce dodaje
 f.kilka(1, 'tab')
 f.jeden('insert')
+f.time.sleep(1)
 f.tekst('S1')
 f.kilka(1, 'tab')
 f.tekst('3')
@@ -230,12 +208,14 @@ f.time.sleep(1)
 f.dwa('shift', 't')
 f.kilka(3, 'tab')
 f.dwa('shift', 'o')
+# asercja
+sprawdz_tech('PP1', 'PP1')
 
 ################################################  tchno dla wyrobu W
 f.kilka(1, 'up')
 f.jeden('f12')
 f.time.sleep(0.5)
-f.kilka(34, 'down')
+f.kilka(31, 'down')
 f.jeden('enter')
 f.dwa('ctrl', 'a')
 f.tekst('W1')
@@ -250,9 +230,9 @@ f.zakladka(1)
 #zakładka operacje
 f.kilka(1, 'tab')
 f.jeden('insert')
-f.time.sleep(1)
+f.time.sleep(2)
 f.jeden('insert')
-f.time.sleep(1)
+f.time.sleep(2)
 # nowa operacja
 f.kilka(2, 'tab')
 f.tekst('OP2')
@@ -261,7 +241,7 @@ f.zakladka(4)
 #zakładka wyroby gotowe
 f.kilka(1, 'tab')
 f.jeden('insert')
-f.time.sleep(1)
+f.time.sleep(2)
 f.tekst('W1')
 f.kilka(1, 'tab')
 f.tekst('1')
@@ -312,10 +292,9 @@ f.time.sleep(1)
 f.jeden('esc')
 
 f.updatesql()
-
-######################## technologia dla półproduktu
-
-
+#asercja
+sprawdz_tech('W1', 'W1')
+sprawdz_tech('PP1', 'PP1')
 
 
 
@@ -334,6 +313,4 @@ f.updatesql()
 # autmatycznie uaktualnij stany mag. wyrobu auto_prz_p
 # automatycznie uaktualnij stany mag. braków auto_prz_b
 # automatycznie uaktualnij stany mag. odpadów auto_prz_o
-
-
 

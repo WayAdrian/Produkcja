@@ -9,7 +9,7 @@ import sys
 import datetime
 import pyodbc
 import datetime
-
+import pytest
 
 pyautogui.PAUSE = 0.4
 
@@ -18,24 +18,25 @@ pyautogui.PAUSE = 0.4
 def aktywacja():
     '''
 
-    :return:
+    :return: aktywuje otwartego Hermesa
     '''
     app_window = pyautogui.getWindowsWithTitle('humansoft HermesSQL')[0]
     app_window.activate()
 
-# Funkcja wyswitlajaca liste okien mozliwych do aktywacji
+
 def listaokien():
     '''
 
-    :return:
+    :return: funkcja wspomagająca, otwiera liste okien otwartych w windows,
+     mozna sobie dokładnie skopiować nazwe
     '''
     window_titles = pyautogui.getAllTitles()
     print(window_titles)
-# klikam w wolne pole hermesa, lewy dolny róg
+
 
 def data():
     '''
-    :return:
+    :return: pobiram date a następnie ją konwetuje w celu wpisania do heresa
     '''
     today = str(datetime.date.today())
     dzis = today.replace("-", "")
@@ -46,25 +47,15 @@ def zakladka(x):
     '''
     for i in range(x):
         keyboard.press_and_release('ctrl+tab')
-        time.sleep(0.2)
-
-# loklaizacja przycisku do przekształcenia
-
-def przeksztalc():
-    '''
-    :return:
-    '''
-    #miejsce(472,695) # laptop
-    miejsce(623,-398) # serwis monitor
-    #miejsce(472, 672) # mon u program
+        time.sleep(0.3)
 
 
+server = '10.10.11.30'
+database = 'Firma_H'
 
-
-server = '10.10.10.220,2120'
-database = 'Firma_CPK'
 username = 'sa'
 password = '3serwis4'
+
 connection_string = f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
 connection = pyodbc.connect(connection_string)
 cursor = connection.cursor()
@@ -83,7 +74,7 @@ def nowytxt():
 
 def doplikutxt(mojtext):
     """
-    :param mojtext: W tym miejscu pisuje sie tekst, który zostanie dodany do pliku .txt
+    :param mojtext: W tym miejscu wpisuje sie tekst, który zostanie dodany do pliku .txt
     :return: Dodanie treści do pliku tekstowego
     """
     with open('Raport.txt', 'a') as plik:
@@ -114,7 +105,7 @@ def miejsce(a, b):
     """
     :param a: współrzędna X na monitorze
     :param b: współrzędna Y na monitorze
-    :return: kliknięcie we wskazany punky
+    :return: kliknięcie we wskazany punk
     """
     pyautogui.click(x=a, y=b)
 
@@ -205,6 +196,15 @@ def updatesql():
 
 
 
+def przeksztalc():
+
+    '''
+    :return: kliknięcie myszki w podany punk na ekranie w celu kliknięcia prycisku
+             do przekształcenia
+    '''
+    dwa('ctrl', 'k')
+    time.sleep(1)
+    dwa('shift', 't')
 
 
 def updatesql2():
